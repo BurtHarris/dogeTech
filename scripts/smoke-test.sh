@@ -5,7 +5,37 @@
 
 set -e  # Exit on any error
 
-echo "🧪 DogeTech Development Environment - Smoke Test"
+echo "# Test 7: Test PowerShell availability (required)
+echo ""
+echo "💻 Test 7: Testing PowerShell availability..." 
+
+if docker-compose exec -T app-dev pwsh -Command "Write-Host 'PowerShell works'" 2>/dev/null | grep -q "PowerShell works"; then
+    pass_test "PowerShell is available and working"
+    
+    # Test PowerShell version
+    PS_VERSION=$(docker-compose exec -T app-dev pwsh -Command '$PSVersionTable.PSVersion.ToString()' 2>/dev/null || echo "")
+    if [[ "$PS_VERSION" == "7."* ]]; then
+        pass_test "PowerShell version $PS_VERSION is correct"
+    else
+        fail_test "PowerShell version unexpected: $PS_VERSION"
+    fi
+    
+    # Test PowerShell basic commands
+    if docker-compose exec -T app-dev pwsh -Command "Get-Location" 2>/dev/null | grep -q "/usr/src/app"; then
+        pass_test "PowerShell Get-Location command works"
+    else
+        fail_test "PowerShell Get-Location command failed"
+    fi
+    
+    # Test PowerShell file operations
+    if docker-compose exec -T app-dev pwsh -Command "Get-ChildItem" 2>/dev/null | grep -q "package.json"; then
+        pass_test "PowerShell Get-ChildItem command works"
+    else
+        fail_test "PowerShell Get-ChildItem command failed"
+    fi
+else
+    fail_test "PowerShell is not available - required for Windows developers"
+fiopment Environment - Smoke Test"
 echo "==============================================="
 
 # Test configuration
@@ -59,7 +89,7 @@ echo "  3. Start development environment"
 echo "  4. Test API endpoints"
 echo "  5. Test container tools"
 echo "  6. Test secrets accessibility"
-echo "  7. Test PowerShell availability"
+echo "  7. Test PowerShell availability (required)"
 echo "  8. Test GitHub tools installation"
 echo ""
 

@@ -63,7 +63,7 @@ try {
     Write-Host "  4. Test API endpoints"
     Write-Host "  5. Test container tools"
     Write-Host "  6. Test secrets accessibility"
-    Write-Host "  7. Test PowerShell availability"
+    Write-Host "  7. Test PowerShell availability (required)"
     Write-Host "  8. Test GitHub tools installation"
     Write-Host ""
 

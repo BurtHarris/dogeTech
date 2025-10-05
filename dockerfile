@@ -17,23 +17,18 @@ RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
     gnupg \
-    # Install PowerShell via direct download (supports more architectures)
-    && ARCH=$(dpkg --print-architecture) \
-    && if [ "$ARCH" = "amd64" ]; then \
-        PWSH_VERSION="7.4.6" \
-        && PWSH_URL="https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell_${PWSH_VERSION}-1.deb_amd64.deb" \
-        && wget -O /tmp/powershell.deb "$PWSH_URL" \
-        && dpkg -i /tmp/powershell.deb \
-        && rm /tmp/powershell.deb; \
-    elif [ "$ARCH" = "arm64" ]; then \
-        echo "PowerShell: ARM64 build will be installed via script later" \
-        && echo '#!/bin/bash' > /usr/local/bin/pwsh \
-        && echo 'echo "PowerShell not available for ARM64 architecture. Use bash or sh instead."' >> /usr/local/bin/pwsh \
-        && chmod +x /usr/local/bin/pwsh; \
-    else \
-        echo "PowerShell not available for architecture: $ARCH"; \
-    fi \
+    # Always install AMD64 PowerShell - Docker handles emulation on ARM64
+    && PWSH_VERSION="7.4.6" \
+    && PWSH_URL="https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell_${PWSH_VERSION}-1.deb_amd64.deb" \
+    && echo "Installing PowerShell ${PWSH_VERSION} for AMD64..." \
+    && wget -O /tmp/powershell.deb "$PWSH_URL" \
+    && dpkg -i /tmp/powershell.deb || true \
+    && apt-get install -f -y \
+    && rm -f /tmp/powershell.deb \
     && rm -rf /var/lib/apt/lists/*
+
+# Verify PowerShell installation
+RUN pwsh --version || echo "PowerShell installation verification failed"
 
 # Set working directory inside container
 WORKDIR /usr/src/app

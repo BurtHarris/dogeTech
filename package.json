@@ -1,7 +1,7 @@
 {
   "name": "dogetech-dev-env",
-  "version": "1.0.0",
-  "description": "Docker development environment",
+  "version": "0.1.0",
+  "description": "A complete Docker-based development environment setup for Node.js/TypeScript projects with PowerShell support for Windows developers",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --inspect=0.0.0.0:9229 src/index.ts",
