@@ -1,0 +1,47 @@
+{
+  "name": "DogeTech Dev Environment",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app-dev",
+  "workspaceFolder": "/usr/src/app",
+  
+  // VS Code configuration
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "github.copilot",
+        "github.copilot-chat",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "typescript.preferences.includePackageJsonAutoImports": "auto",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  },
+
+  // Forward ports
+  "forwardPorts": [3000, 9229],
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "notify"
+    },
+    "9229": {
+      "label": "Debug Port",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // Post-create command
+  "postCreateCommand": "npm install",
+
+  // Keep container running
+  "shutdownAction": "stopCompose"
+}

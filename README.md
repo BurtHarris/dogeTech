@@ -6,7 +6,12 @@
 
 ## Quick Start
 
-### Development Mode
+### Option 1: VS Code Dev Containers (Recommended)
+1. **Install**: [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. **Open**: Command Palette → "Dev Containers: Open Folder in Container"
+3. **Start coding**: VS Code will build and connect to the container automatically!
+
+### Option 2: Manual Docker Setup
 ```bash
 # Build and start development container
 npm run docker:dev
@@ -27,6 +32,9 @@ npm run docker:prod
 # Install dependencies (run once)
 npm install
 
+# Setup GitHub secrets (secure token storage)
+npm run secrets:setup
+
 # Start development environment with hot reload
 npm run docker:dev
 
@@ -35,6 +43,9 @@ npm run docker:prod
 
 # Get interactive shell access to running container
 npm run docker:shell
+
+# Setup GitHub CLI and Copilot CLI authentication
+npm run github:setup
 
 # Rebuild Docker containers (after Dockerfile changes)
 npm run docker:build
@@ -46,14 +57,29 @@ npm run build
 docker-compose down
 ```
 
+### Testing & Validation
+
+```bash
+# Quick test - Core functionality (no secrets required)
+npm run test:quick
+
+# Full smoke test - Complete integration test with secrets
+npm run test:smoke
+
+# Smoke test (Linux/Mac)
+npm run test:smoke:bash
+```
+
 ## What's Included
 
 This dockerized development environment provides:
 
 - 🔄 **Hot Reload**: Automatic restart on file changes with `ts-node-dev`
 - 🐛 **Remote Debugging**: Debug port exposed on `9229` for VS Code
-- 📦 **Multi-stage Builds**: Separate optimized development and production containers
-- 🛠️ **Development Tools**: Git, vim, nano, htop, curl pre-installed
+- 🤖 **GitHub Copilot CLI**: Pre-installed with command suggestions and explanations
+- � **VS Code Integration**: Dev Containers support with extensions pre-configured
+- �📦 **Multi-stage Builds**: Separate optimized development and production containers
+- 🛠️ **Development Tools**: Git, GitHub CLI, vim, nano, htop, curl pre-installed
 - 🔍 **Full TypeScript Support**: Configured with proper types and compilation
 - 🐳 **Docker Compose**: Easy container orchestration for dev/prod environments
 - 📁 **Volume Mounting**: Live code editing without container rebuilds
@@ -63,10 +89,11 @@ This dockerized development environment provides:
 
 ### Development Container (`app-dev`)
 - **Base**: Node.js 20 LTS (slim)
-- **Tools**: Git, vim, nano, htop, curl, procps
+- **Tools**: Git, GitHub CLI, vim, nano, htop, curl, procps
+- **AI**: GitHub Copilot CLI with command suggestions
 - **TypeScript**: Hot reload with `ts-node-dev`
 - **Debugging**: Port 9229 exposed for remote debugging
-- **Volumes**: Live code mounting with `node_modules` isolation
+- **Volumes**: Live code mounting with `node_modules` isolation, SSH keys, GitHub config
 - **Environment**: `NODE_ENV=development`
 
 ### Production Container (`app-prod`)
@@ -92,12 +119,107 @@ This dockerized development environment provides:
    ```
 4. Set breakpoints and start debugging!
 
+## GitHub Copilot CLI Setup
+
+The container comes with GitHub Copilot CLI for AI-powered command assistance, with secure secret management.
+
+### Quick Setup (Recommended)
+1. **Setup secrets**: `npm run secrets:setup` (creates secure token files)
+2. **Start container**: `npm run docker:dev`
+3. **Run setup script**: `npm run github:setup`
+4. **Authenticate**: Follow prompts to complete GitHub authentication
+
+### Manual Setup
+```bash
+# Get shell access
+npm run docker:shell
+
+# Authenticate GitHub CLI
+gh auth login
+
+# Authenticate Copilot CLI
+github-copilot-cli auth
+```
+
+### Usage Examples
+```bash
+# Get command suggestions
+github-copilot-cli suggest "find all typescript files"
+
+# Explain a command
+github-copilot-cli what-the-shell "find . -name '*.ts' -type f"
+
+# Git assistance
+github-copilot-cli git-assist "commit all changes with message"
+
+# Short aliases (available after setup)
+copilot suggest "deploy to production"
+?? "what does this command do: docker ps -a"
+git? "create a new branch"
+```
+
 ## Configuration
 
 ### Environment Variables
 - `NODE_ENV`: `development` or `production`
 - `PORT`: Application port (default: 3000)
 - `DEBUG`: Debug namespaces for enhanced logging
+
+### Docker Secrets (Secure Token Storage)
+GitHub tokens are stored as Docker secrets for enhanced security:
+
+```bash
+# Setup secrets interactively (Windows)
+npm run secrets:setup
+
+# Setup secrets interactively (Linux/Mac)
+npm run secrets:setup:bash
+
+# Manual setup
+echo "your_token_here" > secrets/github_token.txt
+echo "your_token_here" > secrets/gh_token.txt
+chmod 600 secrets/*.txt
+```
+
+**Security Benefits over .env files:**
+- ✅ Tokens stored as files, not environment variables
+- ✅ Mounted as temporary filesystems (tmpfs)
+- ✅ Never exposed in `docker inspect` or process lists
+- ✅ Automatic cleanup when container stops
+- ✅ Restricted file permissions (600)
+- ✅ Not visible in container environment variables
+- ✅ Harder to accidentally leak in logs or dumps
+
+**Access inside container:**
+```bash
+# Secrets are available at /run/secrets/
+cat /run/secrets/github_token
+cat /run/secrets/gh_token
+```
+
+## Testing & Validation
+
+The environment includes comprehensive automated tests to validate functionality:
+
+### Quick Test (`npm run test:quick`)
+- ✅ Container builds successfully
+- ✅ API server starts and responds
+- ✅ TypeScript compilation works
+- ✅ Basic shell functionality
+- ⏱️ **Duration**: ~2-3 minutes
+- 🔓 **No secrets required**
+
+### Smoke Test (`npm run test:smoke`)
+- ✅ All Quick Test validations
+- ✅ Docker secrets mounting and accessibility
+- ✅ GitHub token security validation
+- ✅ Container tools availability (git, curl, vim, etc.)
+- ✅ Node.js version verification
+- ✅ Development environment integration
+- ⏱️ **Duration**: ~3-4 minutes
+- 🔐 **Creates test secrets automatically**
+
+Both tests include automatic cleanup and detailed pass/fail reporting.
 
 ### Ports
 - **3000**: Application HTTP server
@@ -107,12 +229,26 @@ This dockerized development environment provides:
 
 ```
 dogetech-dev-env/
+├── .devcontainer/
+│   └── devcontainer.json           # VS Code Dev Container configuration
+├── scripts/
+│   ├── github-setup.sh             # GitHub CLI and Copilot setup script
+│   ├── setup-secrets.sh            # Docker secrets setup (Linux/Mac)
+│   ├── setup-secrets.ps1           # Docker secrets setup (Windows)
+│   ├── smoke-test.sh               # Comprehensive integration test (Linux/Mac)
+│   ├── smoke-test.ps1              # Comprehensive integration test (Windows)
+│   └── quick-test.ps1              # Quick functionality test
+├── secrets/                        # Docker secrets directory
+│   ├── README.md                   # Secrets documentation
+│   ├── github_token.txt.example    # Token template
+│   └── gh_token.txt.example        # GitHub CLI token template
 ├── src/
 │   └── index.ts                    # Sample TypeScript application
 ├── dist/                           # Compiled JavaScript output
 ├── node_modules/                   # Dependencies (gitignored)
+├── .env.example                    # Environment variables template
 ├── .gitignore                      # Comprehensive ignore rules
-├── docker-compose.yml              # Container orchestration
+├── docker-compose.yml              # Container orchestration with secrets
 ├── dockerfile                      # Multi-stage container definition  
 ├── package.json                    # Dependencies and scripts
 ├── tsconfig.json                   # TypeScript configuration

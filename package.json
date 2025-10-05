@@ -11,7 +11,13 @@
     "docker:dev": "docker-compose up app-dev",
     "docker:prod": "docker-compose up app-prod",
     "docker:build": "docker-compose build",
-    "docker:shell": "docker-compose exec app-dev /bin/bash"
+    "docker:shell": "docker-compose exec app-dev /bin/bash",
+    "github:setup": "docker-compose exec app-dev bash /usr/src/app/scripts/github-setup.sh",
+    "secrets:setup": "pwsh -File scripts/setup-secrets.ps1",
+    "secrets:setup:bash": "bash scripts/setup-secrets.sh",
+    "test:smoke": "pwsh -File scripts/smoke-test.ps1",
+    "test:smoke:bash": "bash scripts/smoke-test.sh",
+    "test:quick": "pwsh -File scripts/quick-test.ps1"
   },
   "dependencies": {
     "typescript": "^5.9.3"

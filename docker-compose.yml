@@ -13,9 +13,15 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - ~/.gitconfig:/root/.gitconfig:ro  # Share git config
+      - ~/.ssh:/root/.ssh:ro              # Share SSH keys for git operations
+      - ~/.github:/root/.github:ro        # Share GitHub CLI config
+      - vscode-server:/root/.vscode-server # VS Code server data
     environment:
       - NODE_ENV=development
       - DEBUG=*
+    secrets:
+      - github_token
+      - gh_token
     command: npm run dev
     stdin_open: true  # Keep STDIN open
     tty: true         # Allocate a pseudo-TTY
@@ -29,3 +35,12 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+
+volumes:
+  vscode-server:  # Persistent VS Code server data
+
+secrets:
+  github_token:
+    file: ./secrets/github_token.txt
+  gh_token:
+    file: ./secrets/gh_token.txt

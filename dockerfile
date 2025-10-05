@@ -9,7 +9,12 @@ RUN apt-get update && apt-get install -y \
     nano \
     procps \
     htop \
+    sudo \
+    wget \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Note: PowerShell can be installed later via the GitHub setup script if needed
 
 # Set working directory
 WORKDIR /usr/src/app
