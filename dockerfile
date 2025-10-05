@@ -1,30 +1,58 @@
 # Multi-stage Dockerfile for Node.js/TypeScript development
 # Learn more: https://docs.docker.com/build/building/multi-stage/
 
-# Use an official Node.js LTS image as base
-FROM node:20-slim AS base
+# Use Ubuntu 22.04 as base for native PowerShell support
+FROM ubuntu:22.04 AS base
 
-# Install essential development tools and PowerShell
-# Package info: https://docs.microsoft.com/en-us/powershell/scripting/install/install-debian
+# Docker build arguments for architecture detection
+ARG TARGETARCH
+
+# Prevent interactive prompts during package installations
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Node.js 20 LTS and essential development tools
 RUN apt-get update && apt-get install -y \
-    git \
+    # Node.js installation dependencies
+    ca-certificates \
     curl \
+    gnupg \
+    # Essential development tools
+    git \
     vim \
     nano \
     procps \
     htop \
     sudo \
     wget \
-    ca-certificates \
-    gnupg \
-    # Always install AMD64 PowerShell - Docker handles emulation on ARM64
-    && PWSH_VERSION="7.4.6" \
-    && PWSH_URL="https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell_${PWSH_VERSION}-1.deb_amd64.deb" \
-    && echo "Installing PowerShell ${PWSH_VERSION} for AMD64..." \
-    && wget -O /tmp/powershell.deb "$PWSH_URL" \
-    && dpkg -i /tmp/powershell.deb || true \
-    && apt-get install -f -y \
-    && rm -f /tmp/powershell.deb \
+    # PowerShell dependencies
+    libicu70 \
+    # Add NodeSource repository for Node.js 20 LTS
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    # Install PowerShell based on target architecture
+    && if [ "$TARGETARCH" = "amd64" ]; then \
+        echo "Installing PowerShell for AMD64..." && \
+        wget -q https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-linux-x64.tar.gz -O powershell.tar.gz; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        echo "Installing PowerShell for ARM64..." && \
+        wget -q https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-linux-arm64.tar.gz -O powershell.tar.gz; \
+    else \
+        echo "Unsupported architecture: $TARGETARCH" && exit 1; \
+    fi \
+    && mkdir -p /opt/microsoft/powershell/7 \
+    && tar zxf powershell.tar.gz -C /opt/microsoft/powershell/7 \
+    && chmod +x /opt/microsoft/powershell/7/pwsh \
+    && ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh \
+    && rm powershell.tar.gz \
+    # Verify installations
+    && echo "Node.js version:" && node --version \
+    && echo "npm version:" && npm --version \
+    && echo "PowerShell version:" && pwsh --version \
+    && echo "Target architecture: $TARGETARCH" \
+    # Clean up
     && rm -rf /var/lib/apt/lists/*
 
 # Verify PowerShell installation
