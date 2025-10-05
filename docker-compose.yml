@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - ~/.gitconfig:/root/.gitconfig:ro  # Share git config
+    environment:
+      - NODE_ENV=development
+      - DEBUG=*
+    command: npm run dev
+    stdin_open: true  # Keep STDIN open
+    tty: true         # Allocate a pseudo-TTY
+
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
