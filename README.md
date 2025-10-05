@@ -1,6 +1,8 @@
 # 🐕 DogeTech Development Environment
 
-A Docker-based development environment for Node.js/TypeScript projects.
+**A complete Docker-based development environment setup for Node.js/TypeScript projects.**
+
+> 🎯 **Purpose**: This package provides a ready-to-use dockerized development environment with hot reload, debugging support, and production builds. Perfect for consistent development across different machines and teams.
 
 ## Quick Start
 
@@ -19,59 +21,122 @@ docker-compose up app-dev
 npm run docker:prod
 ```
 
-### Useful Commands
+### Essential Commands
 
 ```bash
-# Install dependencies
+# Install dependencies (run once)
 npm install
 
-# Build the project
-npm run build
+# Start development environment with hot reload
+npm run docker:dev
 
-# Get a shell inside the running container
+# Start production environment
+npm run docker:prod
+
+# Get interactive shell access to running container
 npm run docker:shell
 
-# Rebuild containers
+# Rebuild Docker containers (after Dockerfile changes)
 npm run docker:build
+
+# Build TypeScript locally
+npm run build
+
+# Stop all containers
+docker-compose down
 ```
 
-## Features
+## What's Included
 
-- 🔄 **Hot Reload**: Automatic restart on file changes
-- 🐛 **Debugging**: Debug port exposed on `9229`
-- 📦 **Multi-stage Build**: Optimized production builds
-- 🛠️ **Development Tools**: Git, vim, nano, htop included
-- 🔍 **Type Safety**: Full TypeScript support
+This dockerized development environment provides:
 
-## Development
+- 🔄 **Hot Reload**: Automatic restart on file changes with `ts-node-dev`
+- 🐛 **Remote Debugging**: Debug port exposed on `9229` for VS Code
+- 📦 **Multi-stage Builds**: Separate optimized development and production containers
+- 🛠️ **Development Tools**: Git, vim, nano, htop, curl pre-installed
+- 🔍 **Full TypeScript Support**: Configured with proper types and compilation
+- 🐳 **Docker Compose**: Easy container orchestration for dev/prod environments
+- 📁 **Volume Mounting**: Live code editing without container rebuilds
+- 🌐 **API Ready**: Sample HTTP server listening on port 3000
 
-The development container includes:
-- Node.js 20 LTS
-- TypeScript with hot reload
-- Debug port (9229) for VS Code debugging
-- Volume mounting for live code changes
-- Development tools and utilities
+## Container Specifications
 
-## Debugging
+### Development Container (`app-dev`)
+- **Base**: Node.js 20 LTS (slim)
+- **Tools**: Git, vim, nano, htop, curl, procps
+- **TypeScript**: Hot reload with `ts-node-dev`
+- **Debugging**: Port 9229 exposed for remote debugging
+- **Volumes**: Live code mounting with `node_modules` isolation
+- **Environment**: `NODE_ENV=development`
 
-To debug with VS Code:
-1. Start the development container: `npm run docker:dev`
-2. Attach VS Code debugger to `localhost:9229`
-3. Set breakpoints and debug!
+### Production Container (`app-prod`)
+- **Base**: Node.js 20 LTS (slim) 
+- **Optimized**: Multi-stage build with only production dependencies
+- **Compiled**: Pre-built TypeScript to JavaScript
+- **Environment**: `NODE_ENV=production`
 
-## Environment Variables
+## Debugging with VS Code
 
-- `NODE_ENV`: Set to `development` or `production`
+1. Start development container: `npm run docker:dev`
+2. In VS Code, go to Run & Debug (Ctrl+Shift+D)
+3. Create launch configuration:
+   ```json
+   {
+     "type": "node",
+     "request": "attach",
+     "name": "Docker Debug",
+     "port": 9229,
+     "restart": true,
+     "remoteRoot": "/usr/src/app"
+   }
+   ```
+4. Set breakpoints and start debugging!
+
+## Configuration
+
+### Environment Variables
+- `NODE_ENV`: `development` or `production`
 - `PORT`: Application port (default: 3000)
-- `DEBUG`: Debug namespaces
+- `DEBUG`: Debug namespaces for enhanced logging
+
+### Ports
+- **3000**: Application HTTP server
+- **9229**: Node.js debug/inspector port
 
 ## Project Structure
 
 ```
-.
-├── src/              # Source code
-├── dist/             # Compiled output
-├── docker-compose.yml
-├── Dockerfile
-└── package.json
+dogetech-dev-env/
+├── src/
+│   └── index.ts                    # Sample TypeScript application
+├── dist/                           # Compiled JavaScript output
+├── node_modules/                   # Dependencies (gitignored)
+├── .gitignore                      # Comprehensive ignore rules
+├── docker-compose.yml              # Container orchestration
+├── dockerfile                      # Multi-stage container definition  
+├── package.json                    # Dependencies and scripts
+├── tsconfig.json                   # TypeScript configuration
+├── docker-compose.override.example.yml  # Local development overrides
+└── README.md                       # This file
 ```
+
+## Getting Started
+
+1. **Clone or download this repository**
+2. **Install dependencies**: `npm install`
+3. **Start development**: `npm run docker:dev`
+4. **Access your app**: Visit `http://localhost:3000`
+5. **Start coding**: Edit files in `src/` and watch them reload automatically!
+
+## Use Cases
+
+Perfect for:
+- ✅ **Team Development**: Consistent environment across all developers
+- ✅ **CI/CD Pipelines**: Reproducible builds and deployments  
+- ✅ **Learning Docker**: Complete example with best practices
+- ✅ **Microservices**: Template for containerized Node.js services
+- ✅ **Remote Development**: Works great with VS Code Remote-Containers
+
+---
+
+**Built with ❤️ for developers who want a hassle-free Docker development experience.**

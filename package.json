@@ -1,5 +1,5 @@
 {
-  "name": "dogetech",
+  "name": "dogetech-dev-env",
   "version": "1.0.0",
   "description": "Docker development environment",
   "main": "dist/index.js",
