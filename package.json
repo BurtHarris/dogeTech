@@ -1,7 +1,7 @@
 {
   "name": "dogetech-dev-env",
-  "version": "0.2.0",
-  "description": "A safe, isolated experimental development environment for GitHub Copilot experiments using VS Code Dev Containers",
+  "version": "0.2.1",
+  "description": "Dev Containers for Windows Developers! Safe, isolated Node.js/TypeScript environment using VS Code Dev Containers. Perfect for GitHub Copilot experiments without cluttering your Windows system.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --inspect=0.0.0.0:9229 src/index.ts",
