@@ -22,7 +22,11 @@
     "test:quick": "pwsh -File scripts/quick-test.ps1",
     "image:check-arch": "pwsh -File scripts/check-image-arch.ps1",
     "check:requirements": "pwsh -File scripts/check-host-requirements.ps1",
-    "check:requirements:bash": "bash scripts/check-host-requirements.sh"
+    "check:requirements:bash": "bash scripts/check-host-requirements.sh",
+    "shell:powershell": "pwsh -File scripts/enter-powershell.ps1",
+    "shell:powershell:bash": "bash scripts/enter-powershell.sh",
+    "shell:bash": "docker exec -it app-dev bash",
+    "shell": "npm run shell:powershell"
   },
   "dependencies": {
     "typescript": "^5.9.3"
