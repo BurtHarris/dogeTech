@@ -97,9 +97,21 @@ FROM base AS builder
 # Compile TypeScript to JavaScript
 RUN npm run build
 
-# --- Production stage ---
+# --- Production stage ---  
 # Multi-stage build: smaller production image without dev dependencies
-FROM node:20-slim AS production
+FROM ubuntu:22.04 AS production
+
+# Install Node.js 20 LTS for production
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
