@@ -5,7 +5,7 @@ console.log('Version:', process.version);
 // Basic HTTP server example
 import { createServer } from 'http';
 
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 
 const server = createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'application/json' });
