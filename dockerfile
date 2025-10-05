@@ -6,6 +6,17 @@ FROM ubuntu:22.04 AS base
 
 # Docker build arguments for architecture detection
 ARG TARGETARCH
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
+
+# Add labels for better image identification and management
+LABEL org.opencontainers.image.title="DogeTech Development Environment"
+LABEL org.opencontainers.image.description="Node.js/TypeScript development with cross-platform PowerShell support"
+LABEL org.opencontainers.image.version="0.1.1"
+LABEL org.opencontainers.image.architecture="${TARGETARCH}"
+LABEL org.opencontainers.image.platform="${TARGETPLATFORM}"
+LABEL dogetech.powershell.version="7.4.6"
+LABEL dogetech.nodejs.version="20.19.5"
 
 # Prevent interactive prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
