@@ -22,7 +22,7 @@ A **safe experimental environment** for learning Node.js, TypeScript, and GitHub
 ### Step 2: Get the Project
 ```powershell
 # Open PowerShell and run:
-git clone https://github.com/[USERNAME]/dogeTech.git
+git clone https://github.com/BurtHarris/dogeTech.git
 cd dogeTech
 code .
 ```

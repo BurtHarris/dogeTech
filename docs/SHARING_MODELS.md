@@ -17,7 +17,7 @@ You've built an awesome experimental environment - now how do you share it with 
 
 **Steps for apprentice:**
 ```powershell
-git clone https://github.com/yourusername/dogeTech.git
+git clone https://github.com/BurtHarris/dogeTech.git
 cd dogeTech
 code .
 # VS Code prompts: "Reopen in Container" → Click it!
@@ -129,8 +129,8 @@ git add .
 git commit -m "Initial DogeTech Dev Container setup"
 
 # Create repo on GitHub, then:
-git remote add origin https://github.com/yourusername/dogeTech.git
-git push -u origin main
+git remote add origin https://github.com/BurtHarris/dogeTech.git
+git push -u origin master
 ```
 
 ### Step 2: Create Simple Instructions for Apprentice
@@ -144,7 +144,7 @@ Create a `APPRENTICE_SETUP.md`:
 2. Install VS Code + Dev Containers extension
 3. Clone this repository:
    ```
-   git clone https://github.com/yourusername/dogeTech.git
+   git clone https://github.com/BurtHarris/dogeTech.git
    cd dogeTech
    code .
    ```
