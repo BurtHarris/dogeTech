@@ -152,10 +152,8 @@ RUN echo '# Windows-friendly bash configuration' > /etc/bash.bashrc.local \
     && echo 'set mark-symlinked-directories on' >> /etc/inputrc.local \
     && echo '$include /etc/inputrc.local' >> /etc/inputrc
 
-# Copy source code (after dependencies for better caching)
-COPY . .
-
 # Development stage - includes dev tools and doesn't build
+# Note: Source code is bind-mounted at runtime, not copied during build
 FROM base AS development
 
 # Expose development ports (app + debugger)

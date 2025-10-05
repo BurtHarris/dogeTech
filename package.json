@@ -1,32 +1,22 @@
 {
   "name": "dogetech-dev-env",
-  "version": "0.1.1",
-  "description": "A complete Docker-based development environment setup for Node.js/TypeScript projects with cross-platform PowerShell support",
+  "version": "0.2.0",
+  "description": "A safe, isolated experimental development environment for GitHub Copilot experiments using VS Code Dev Containers",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --inspect=0.0.0.0:9229 src/index.ts",
     "dev:debug": "ts-node-dev --respawn --transpile-only --inspect-brk=0.0.0.0:9229 src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "docker:dev": "docker-compose up app-dev",
-    "docker:prod": "docker-compose up app-prod",
-    "docker:build": "docker-compose build",
-    "docker:build:amd64": "TARGETARCH=amd64 docker-compose build",
-    "docker:build:arm64": "TARGETARCH=arm64 docker-compose build",
-    "docker:shell": "docker-compose exec app-dev /bin/bash",
-    "github:setup": "docker-compose exec app-dev bash /usr/src/app/scripts/github-setup.sh",
+    
+    "container:build": "docker-compose build app-dev",
+    "container:rebuild": "docker-compose build app-dev --no-cache",
+    "container:up": "docker-compose up app-dev",
+    "container:down": "docker-compose down",
+    
     "secrets:setup": "pwsh -File scripts/setup-secrets.ps1",
-    "secrets:setup:bash": "bash scripts/setup-secrets.sh",
-    "test:smoke": "pwsh -File scripts/smoke-test.ps1",
-    "test:smoke:bash": "bash scripts/smoke-test.sh",
-    "test:quick": "pwsh -File scripts/quick-test.ps1",
-    "image:check-arch": "pwsh -File scripts/check-image-arch.ps1",
-    "check:requirements": "pwsh -File scripts/check-host-requirements.ps1",
-    "check:requirements:bash": "bash scripts/check-host-requirements.sh",
-    "shell:powershell": "pwsh -File scripts/enter-powershell.ps1",
-    "shell:powershell:bash": "bash scripts/enter-powershell.sh",
-    "shell:bash": "docker exec -it app-dev bash",
-    "shell": "npm run shell:powershell"
+    "github:setup": "bash scripts/github-setup.sh",
+    "requirements:check": "pwsh -File scripts/check-host-requirements.ps1"
   },
   "dependencies": {
     "typescript": "^5.9.3"

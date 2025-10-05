@@ -1,47 +1,73 @@
 {
-  "name": "DogeTech Dev Environment",
+  "name": "DogeTech Experimental Dev Environment",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "app-dev",
   "workspaceFolder": "/usr/src/app",
   
-  // VS Code configuration
+  // Configure VS Code for optimal development experience
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-vscode.vscode-typescript-next",
-        "github.copilot",
-        "github.copilot-chat",
-        "ms-vscode.vscode-json",
-        "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode",
-        "ms-vscode.vscode-eslint"
-      ],
       "settings": {
+        // Set PowerShell as default terminal
+        "terminal.integrated.defaultProfile.linux": "pwsh",
+        "terminal.integrated.profiles.linux": {
+          "pwsh": {
+            "path": "/usr/bin/pwsh",
+            "args": ["-NoLogo"],
+            "icon": "terminal-powershell"
+          },
+          "bash": {
+            "path": "/bin/bash",
+            "icon": "terminal-bash"
+          }
+        },
+        // TypeScript settings
         "typescript.preferences.includePackageJsonAutoImports": "auto",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": "explicit"
+        },
+        // GitHub Copilot settings
+        "github.copilot.enable": {
+          "*": true,
+          "yaml": false,
+          "plaintext": false
         }
-      }
+      },
+      "extensions": [
+        // Essential extensions for the experimental environment
+        "ms-vscode.vscode-typescript-next",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-vscode.powershell",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint"
+      ]
     }
   },
 
-  // Forward ports
+  // Port forwarding for development
   "forwardPorts": [3000, 9229],
   "portsAttributes": {
     "3000": {
-      "label": "Application",
+      "label": "Application Server",
       "onAutoForward": "notify"
     },
     "9229": {
-      "label": "Debug Port",
+      "label": "Node.js Debug Port",
       "onAutoForward": "silent"
     }
   },
 
-  // Post-create command
+  // Lifecycle commands
   "postCreateCommand": "npm install",
+  "postStartCommand": "echo '🚀 DogeTech Experimental Dev Container Ready!' && echo '📝 Edit files in VS Code on Windows' && echo '⚡ Run commands in this PowerShell terminal' && echo '🤖 GitHub Copilot is enabled for experiments'",
 
-  // Keep container running
+  // Container user (root for simplicity in experimental environment)
+  "remoteUser": "root",
+  
+  // Keep container running for persistent development session
   "shutdownAction": "stopCompose"
 }

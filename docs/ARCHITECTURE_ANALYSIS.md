@@ -95,14 +95,39 @@ If you want this to be reusable for multiple projects:
 3. **Template structure** that other projects can copy/customize
 4. **Clear instructions** on adapting for different projects
 
-## ❓ Questions for You
+## ✅ Architecture Decision
 
-1. **Primary Use Case**: Is this for developing THIS specific project, or a template for multiple projects?
+**CLARIFIED REQUIREMENTS:**
+- **Primary Use Case**: Safe, isolated development environment for GitHub Copilot experiments
+- **Target Users**: You + apprentice with identical Surface AI laptops (and gaming desktops)
+- **Code Location**: VS Code on Windows host, files bind-mounted to container
+- **VS Code Integration**: Use Dev Containers exsome tension for seamless experience
+- **Extensibility**: Easy to add tools later (Python, SvelteKit, etc.)
+- **Risk Management**: Container isolation protects host from experimental tools
 
-2. **Code Location**: Should code be editable on host (bind mount) or immutable in container (copy)?
+## 🎯 Final Architecture: "Experimental Dev Container"
 
-3. **Reusability**: Will other developers use this exact setup, or adapt it for their projects?
+### Clear Design:
+1. **Host (Windows)**: Runs VS Code with Dev Containers extension
+2. **Container**: Provides isolated Node.js/TypeScript environment
+3. **Integration**: VS Code automatically connects to container
+4. **Files**: Live on Windows, bind-mounted to container
+5. **Commands**: Run inside container via VS Code's integrated terminal
 
-4. **Development Style**: Do you prefer developing "inside" the container or "through" the container?
+### Benefits:
+- ✅ Familiar VS Code experience
+- ✅ Safe experimentation (container isolation)
+- ✅ Consistent between machines
+- ✅ Easy to extend with new tools
+- ✅ No manual container commands needed
+- ✅ IntelliSense works with container dependencies
 
-Once we clarify the intended architecture, I can refactor the documentation and configuration to be crystal clear about what runs where and why.
+## 🚀 Implementation Plan
+
+1. **Remove confusing elements** (unused COPY commands, mixed script contexts)
+2. **Add Dev Containers configuration** (.devcontainer/devcontainer.json)
+3. **Simplify Docker setup** (container as pure environment, not application)
+4. **Update documentation** (clear host vs container separation)
+5. **Create setup guide** for apprentice replication
+
+This gives you a production-ready experimental environment that's both safe and easy to use!

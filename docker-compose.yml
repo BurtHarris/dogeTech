@@ -7,24 +7,28 @@ services:
       args:
         TARGETARCH: ${TARGETARCH:-arm64}  # Default to arm64, override via env var
     ports:
-      - "3000:3000"
-      - "9229:9229"  # Debug port
+      - "3000:3000"   # Application server
+      - "9229:9229"   # Node.js debug port
     volumes:
+      # Bind mount project files (editable on Windows host)
       - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - ~/.gitconfig:/root/.gitconfig:ro  # Share git config
-      - ~/.ssh:/root/.ssh:ro              # Share SSH keys for git operations
-      - ~/.github:/root/.github:ro        # Share GitHub CLI config
-      - vscode-server:/root/.vscode-server # VS Code server data
+      - /usr/src/app/node_modules  # Prevent overwriting container node_modules
+      
+      # Share host development tools and configs
+      - ~/.gitconfig:/root/.gitconfig:ro     # Git configuration
+      - ~/.ssh:/root/.ssh:ro                 # SSH keys for git operations  
+      - ~/.github:/root/.github:ro           # GitHub CLI configuration
+      - vscode-server:/root/.vscode-server   # VS Code server data persistence
     environment:
       - NODE_ENV=development
       - DEBUG=*
     secrets:
       - github_token
       - gh_token
-    command: npm run dev
-    stdin_open: true  # Keep STDIN open
-    tty: true         # Allocate a pseudo-TTY
+    # Keep container running for Dev Containers (VS Code will manage commands)
+    command: sleep infinity
+    stdin_open: true  # Required for interactive development
+    tty: true         # Required for proper terminal experience
 
   app-prod:
     build:

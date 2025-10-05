@@ -1,30 +1,61 @@
-# 🐕 DogeTech Development Environment
+# � DogeTech Experimental Dev Environment
 
-**A complete Docker-based development environment setup for Node.js/TypeScript projects.**
+**A safe, isolated development environment for GitHub Copilot experiments using VS Code Dev Containers.**
 
-> 🎯 **Purpose**: This package provides a ready-to-use dockerized development environment with hot reload, debugging support, and production builds. Perfect for consistent development across different machines and teams.
+> 🎯 **Purpose**: Containerized Node.js/TypeScript environment that protects your host machine while providing a consistent, AI-enhanced development experience. Perfect for experimenting with new tools, learning, and rapid prototyping.
 
-## Quick Start
+## ⚡ Quick Start (5 minutes)
 
-### Option 1: VS Code Dev Containers (Recommended)
-1. **Install**: [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. **Open**: Command Palette → "Dev Containers: Open Folder in Container"
-3. **Start coding**: VS Code will build and connect to the container automatically!
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [VS Code](https://code.visualstudio.com/) 
+- [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-### Option 2: Manual Docker Setup
-```bash
-# Build and start development container
-npm run docker:dev
+### Setup
+1. **Clone and open**:
+   ```powershell
+   git clone <repository-url>
+   cd dogeTech
+   code .
+   ```
 
-# Or manually with docker-compose
-docker-compose up app-dev
+2. **Open in container**:
+   - VS Code will prompt: "Reopen in Container" → Click it!
+   - **OR** Command Palette (`Ctrl+Shift+P`) → "Dev Containers: Reopen in Container"
+
+3. **Start experimenting**:
+   - Files stay on Windows (edit normally in VS Code)
+   - Commands run safely in Ubuntu container
+   - GitHub Copilot ready for AI-assisted coding
+
+## 🎯 What You Get
+
+- ✅ **Safe Isolation**: Container protects your Windows machine
+- ✅ **Familiar Editing**: VS Code works exactly like normal
+- ✅ **PowerShell Terminal**: Windows-friendly shell inside container  
+- ✅ **GitHub Copilot**: Pre-configured for AI experiments
+- ✅ **Hot Reload**: Changes appear instantly
+- ✅ **Consistent Environment**: Same setup across all machines
+
+## 🤝 Sharing with Your Team
+
+### For Your Apprentice
+1. **Push this repository to GitHub**
+2. **Share the repository URL** 
+3. **She follows [APPRENTICE_SETUP.md](APPRENTICE_SETUP.md)**
+4. **Identical environment automatically created**
+
+### Collaboration Workflow
+```powershell
+# You make improvements:
+git add . && git commit -m "Added Python support" && git push
+
+# She gets updates:
+git pull
+# In VS Code: Ctrl+Shift+P → "Dev Containers: Rebuild Container"
 ```
 
-### Production Mode
-```bash
-# Build and start production container
-npm run docker:prod
-```
+**Result**: Both of you have identical experimental environments that stay in sync!
 
 ### Essential Commands
 
