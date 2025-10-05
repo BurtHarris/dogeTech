@@ -20,7 +20,9 @@
     "test:smoke": "pwsh -File scripts/smoke-test.ps1",
     "test:smoke:bash": "bash scripts/smoke-test.sh",
     "test:quick": "pwsh -File scripts/quick-test.ps1",
-    "image:check-arch": "pwsh -File scripts/check-image-arch.ps1"
+    "image:check-arch": "pwsh -File scripts/check-image-arch.ps1",
+    "check:requirements": "pwsh -File scripts/check-host-requirements.ps1",
+    "check:requirements:bash": "bash scripts/check-host-requirements.sh"
   },
   "dependencies": {
     "typescript": "^5.9.3"
